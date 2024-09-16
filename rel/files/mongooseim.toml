@@ -9,14 +9,18 @@
   all_metrics_are_global = {{{all_metrics_are_global}}}
   {{/all_metrics_are_global}}
   {{#sm_backend}}
-  sm_backend = {{{sm_backend}}}
+  sm_backend = "cets"  # Use CETS for session management
   {{/sm_backend}}
   {{#component_backend}}
-  component_backend = {{{component_backend}}}
+  component_backend = "cets"  # Use CETS for components
   {{/component_backend}}
   {{#s2s_backend}}
-  s2s_backend = {{{s2s_backend}}}
+  s2s_backend = "cets"  # Use CETS for server-to-server connections
   {{/s2s_backend}}
+
+  sm_backend = "cets"  # Use CETS for session management
+  component_backend = "cets"  # Use CETS for components
+  s2s_backend = "cets"
   max_fsm_queue = 1000
   {{#http_server_name}}
   http_server_name = {{{http_server_name}}}
@@ -168,17 +172,20 @@
     {{{auth_method_opts}}}{{/auth_method_opts}}
   {{/auth_method}}
 
-{{{internal_databases}}}
+# {{{internal_databases}}}
 
-{{#outgoing_pools}}
-{{{outgoing_pools}}}
-{{/outgoing_pools}}
-{{^outgoing_pools}}
+  [internal_databases.cets] 
+
+# {{#outgoing_pools}}
+# {{{outgoing_pools}}}
+# {{/outgoing_pools}}
+# {{^outgoing_pools}}
+
 #[outgoing_pools.rdbms.default]
 #  scope = "global"
 #  workers = 5
 #
-#  [outgoing_pools.rdbms.default.connection]
+#   [outgoing_pools.rdbms.default.connection]
 #    driver = "pgsql"
 #    host = "localhost"
 #    database = "mongooseim"
@@ -187,7 +194,23 @@
 #    tls.required = true
 #    tls.cacertfile = "priv/ssl/cacert.pem"
 #    tls.server_name_indication.enabled = false
-{{/outgoing_pools}}
+
+# {{/outgoing_pools}}
+
+[outgoing_pools.rdbms.default]
+  scope = "global"
+  workers = 5
+
+[outgoing_pools.rdbms.default.connection]
+  driver = "mysql"
+  host = "172.17.0.2"
+  port = 3306
+  database = "mongooseim"
+  username = "root"
+  password = "karthik1234"
+  tls.required = true
+  tls.cacertfile = "priv/ssl/cacert.pem"
+  tls.server_name_indication.enabled = false
 
 [services.service_mongoose_system_metrics]
 
@@ -213,9 +236,10 @@
 {{{mod_last}}}
 {{/mod_last}}
 [modules.mod_stream_management]
-  {{#stream_management_backend}}
-  backend = "{{{stream_management_backend}}}"
-  {{/stream_management_backend}}
+  # {{#stream_management_backend}}
+  # backend = "{{{stream_management_backend}}}"
+  # {{/stream_management_backend}}
+  backend = "cets"
 
 {{#mod_offline}}
 [modules.mod_offline]
@@ -242,20 +266,28 @@
 
 [modules.mod_presence]
 
-{{#mod_roster}}
+# {{#mod_roster}}
+# [modules.mod_roster]
+# {{{mod_roster}}}
+# {{/mod_roster}}
+
 [modules.mod_roster]
-{{{mod_roster}}}
-{{/mod_roster}}
+  versioning = true
+  store_current_id = true
+  backend = "rdbms"
+
 [modules.mod_sic]
 
 {{#mod_vcard}}
 [modules.mod_vcard]
+  backend = "rdbms"
 {{{mod_vcard}}}
 {{/mod_vcard}}
 [modules.mod_bosh]
-  {{#bosh_backend}}
-  backend = {{{bosh_backend}}}
-  {{/bosh_backend}}
+  # {{#bosh_backend}}
+  # backend = {{{bosh_backend}}}
+  # {{/bosh_backend}}
+  backend = "cets"
 
 [modules.mod_carboncopy]
 
