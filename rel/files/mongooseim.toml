@@ -172,7 +172,8 @@
     {{{auth_method_opts}}}{{/auth_method_opts}}
   {{/auth_method}}
 
-# {{{internal_databases}}}
+  {{{internal_databases}}}
+
 
   [internal_databases.cets] 
 
@@ -203,14 +204,13 @@
 
 [outgoing_pools.rdbms.default.connection]
   driver = "mysql"
-  host = "172.17.0.2"
+  host = "127.0.0.1"
   port = 3306
-  database = "mongooseim"
-  username = "root"
-  password = "karthik1234"
-  tls.required = true
-  tls.cacertfile = "priv/ssl/cacert.pem"
-  tls.server_name_indication.enabled = false
+  database = "mongooseim_db"
+  username = "mongooseim_user"
+  password = "mysql1234"
+  query_timeout = 5000
+  keepalive_interval = 30
 
 [services.service_mongoose_system_metrics]
 
