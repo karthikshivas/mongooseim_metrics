@@ -1,5 +1,5 @@
 [general]
-  loglevel = "info"
+  loglevel = "debug"
   hosts = [{{{hosts}}}]
   host_types = [{{{host_types}}}]
   default_server_domain = {{{default_server_domain}}}
@@ -290,6 +290,16 @@
   backend = "cets"
 
 [modules.mod_carboncopy]
+
+[modules.mod_caps]
+  backend = "rdbms"
+
+[modules.mod_pubsub]
+  backend = "rdbms"
+  plugins = ["flat", "pep"]
+  max_items_node = 1000
+  ignore_pep_from_offline = false
+  last_item_cache = "rdbms"
 
 [shaper.normal]
   max_rate = 1000
